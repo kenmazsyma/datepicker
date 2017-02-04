@@ -1,0 +1,36 @@
+.datepicker {
+}
+
+.datepicker:focus {
+	outline:0px;
+}
+
+.datepicker > input {
+	width:1px;
+	height:1px;
+	border:0px;
+	padding:0px;
+	margin:0px;
+	position:fixed;
+	left:-100px;
+	background:transparent;
+	ime-mode:disabled;
+}
+
+.datapicker > div {
+	display:table;
+}
+
+.datepicker > div > div {
+	display:table-cell;
+	padding:2px;
+	vertical-align:middle;
+}
+
+.datepicker > div > .fs {
+	background-color:#fff0e8;
+}
+
+.datepicker:after {
+	clear:both;
+}

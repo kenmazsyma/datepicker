@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="test.css">
+		<link rel="stylesheet" href="../css/datepicker.css">
+		<script type="text/javascript">
+		-->
+			var elm;
+			window.onload = function() {
+				elm = new DatePicker($('#datectrl'), new Date(), 'en-uk');
+			}
+		-->
+		</script>
+	</head>
+	<body>
+		<div id="datectrl">
+		</div>
+		<a href="#" onclick="elm.mode(true)">edit</a>　
+		<a href="#" onclick="elm.mode(false)">ref</a>　
+		<a href="#" onclick="alert(elm.val())">data</a>　
+		<script type="text/javascript" src="jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/datepicker.js"></script>
+	</body>
+</html>
