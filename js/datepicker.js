@@ -3,7 +3,7 @@ var LANG = {
 	UK : 1,
 	JP : 2,
 	parse : function(l) {
-		/-(.*)$/.exec(l);
+		/[-_](.*)$/.exec(l);
 		if (RegExp.$1=='') {
 			return LANG.UK;
 		}
@@ -147,49 +147,50 @@ DP_Number.prototype.input = function(code) {
 	return 0;
 }
 
-function DatePicker(elm, d, lang) {
+function DatePicker(d, lang) {
 	var cur = -1;
 	var self = this;
 	this.edit = false;
-	this._ = $(elm);
 	this._D = (d===undefined) ? new Date() : d;
 	this._L = (lang===undefined) 
 			? LANG.parse(navigator.language?navigator.language : navigator.userLanguage)
 			: LANG.parse(lang);
-	var inp = $('<input type="number">').keydown(function(e) {
-		if ((cur==-1) || (cur>=self.elms.length)) return;
-		var move = self.elms[cur].input(e.keyCode);
-		if (move==-1) {
-			while(1) {
-				self.elms[cur].blur();
-				--cur;
-				if (cur<0) {
-					self._.blur();
-					break;
+	this.inp = function() {
+		return $('<input type="number" pattern="[\-\d]\d)*">').keydown(function(e) {
+			if ((cur==-1) || (cur>=self.elms.length)) return;
+			var move = self.elms[cur].input(e.keyCode);
+			if (move==-1) {
+				while(1) {
+					self.elms[cur].blur();
+					--cur;
+					if (cur<0) {
+						self._.blur();
+						break;
+					}
+					if (self.elms[cur].focus()) break;
 				}
-				if (self.elms[cur].focus()) break;
-			}
-		} else if (move==1) {
-			while(1) {
-				self.elms[cur].blur();
-				cur++;
-				if (cur>=self.elms.length) {
-					self._.blur();
-					break;
+			} else if (move==1) {
+				while(1) {
+					self.elms[cur].blur();
+					cur++;
+					if (cur>=self.elms.length) {
+						self._.blur();
+						break;
+					}
+					if (self.elms[cur].focus()) break;
 				}
-				if (self.elms[cur].focus()) break;
 			}
-		}
-	}).focus(function(e) {
-		for (cur = 0; cur<self.elms.length; cur++) {
-			if (self.elms[0].focus()) break;
-		}
-		if (cur==self.elms.length) cur = -1;
-	}).blur(function(e) {
-		if ((cur>=0)&&(cur<self.elms.length)) self.elms[cur].blur();
-		self.makeValue();
-	});
-	this._.append(inp).attr('tabindex', 0).focus(function(e){
+		}).focus(function(e) {
+			for (cur = 0; cur<self.elms.length; cur++) {
+				if (self.elms[0].focus()) break;
+			}
+			if (cur==self.elms.length) cur = -1;
+		}).blur(function(e) {
+			if ((cur>=0)&&(cur<self.elms.length)) self.elms[cur].blur();
+			self.makeValue();
+		});
+	};
+/*	this._.append(inp).attr('tabindex', 0).focus(function(e){
 		if (!self.edit) return false;
 		inp.focus();
 	}).addClass('datepicker')
@@ -198,7 +199,7 @@ function DatePicker(elm, d, lang) {
 	})
 	.blur(function(e){
 		inp.blur();
-	});
+	});*/
 	var getMaxDate = function(y,m) {
 		var max = [31,28,31,30,31,30,31,31,30,31,30,31][m-1];
 		if (m==2) {
@@ -295,18 +296,33 @@ function DatePicker(elm, d, lang) {
 		}
 		break;
 	}
+}
+
+DatePicker.prototype.attach = function(elm) {
 	var d = $('<div>');
+	var self = this;
 	for ( var i=0; i<this.elms.length; i++ ) {
 		d.append(this.elms[i].elm());
 	}
-	this._.append(d);
+	var inp = this.inp();
+	this._ = $(elm).html('').append(d)
+	.append(inp).attr('tabindex', 0).focus(function(e){
+		if (!self.edit) return false;
+		inp.focus();
+	}).addClass('datepicker')
+	.click(function() {
+		self._.focus();
+	})
+	.blur(function(e){
+		inp.blur();
+	});
 }
 
 DatePicker.prototype.mode = function(edit) {
-	this.edit = edit;
-	if (!edit) {
+	if (this.edit&&!edit) {
 		this._.blur();
 	}
+	this.edit = edit;
 }
 
 DatePicker.prototype.val = function() {

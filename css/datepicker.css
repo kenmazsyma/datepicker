@@ -1,4 +1,5 @@
 .datepicker {
+	cursor:default;
 }
 
 .datepicker:focus {
@@ -22,13 +23,14 @@
 }
 
 .datepicker > div > div {
+	border:1px solid rgba(1,1,1,0);
 	display:table-cell;
-	padding:2px;
+	padding:1px;
 	vertical-align:middle;
 }
 
 .datepicker > div > .fs {
-	background-color:#fff0e8;
+	border:1px solid #eb8;
 }
 
 .datepicker:after {

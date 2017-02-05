@@ -9,7 +9,8 @@
 		-->
 			var elm;
 			window.onload = function() {
-				elm = new DatePicker($('#datectrl'), new Date(), 'en-uk');
+				elm = new DatePicker(new Date(), 'en-uk');
+				elm.attach($('#datectrl'));
 			}
 		-->
 		</script>
